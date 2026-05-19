@@ -13,9 +13,11 @@ const sanitizePgn = (pgn: string) =>
 
 export const buildReviewFromPgn = (pgn: string): GameReviewData => {
   const game = new Chess();
-  const sanitized = sanitizePgn(pgn);
-  const loaded = game.loadPgn(sanitized);
-  if (!loaded) {
+ const sanitized = sanitizePgn(pgn);
+  
+  try {
+    game.loadPgn(sanitized);
+  } catch (e) {
     throw new Error("Could not parse PGN");
   }
 
