@@ -401,9 +401,16 @@ export const ChessArena = ({ initialMode = "ai" }: ChessArenaProps) => {
           id: userId,
           username: String(data.user.user_metadata?.username ?? `sigma_${userId.slice(0, 5)}`),
         });
-      } else {
-        setProfile((prev) => ({ ...profileRow, games_played: prev.games_played }));
-      }
+     } else {
+  setProfile((prev) => {
+    if (!prev) return prev; // если стейт профиля вдруг null, возвращаем его
+    return { 
+      ...prev,           // сначала разворачиваем старый стейт (там лежит calibrated)
+      ...profileRow,      // поверх накатываем новые данные из базы данных
+      games_played: prev.games_played // сохраняем старое количество игр, как у тебя и было
+    };
+  });
+}
 
       setSyncInfo("Supabase sync enabled");
     };
