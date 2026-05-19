@@ -352,9 +352,10 @@ export const ChessArena = ({ initialMode = "ai" }: ChessArenaProps) => {
   useEffect(() => {
     if (gameMode !== "online" || matchId || onlineStatus !== "Waiting for opponent...") return;
     if (!supabaseClient) return;
-    let active = true;
+   let active = true;
     const timer = setInterval(async () => {
-      const { data, error } = await supabaseClient.rpc("join_matchmaking", { p_time_control: timeControl });
+      if (!supabaseClient) return;
+        const { data, error } = await supabaseClient.rpc("join_matchmaking", { p_time_control: timeControl });
       if (!active || error) return;
       const nextMatchId = (data as string | null) ?? null;
       if (nextMatchId) {
